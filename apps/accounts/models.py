@@ -52,7 +52,13 @@ class User(AbstractUser, IsDeletedModel):
 
     @property
     def full_name(self):
+        """
+        Возвращает имя и фамилию пользователя
+        """
         return f'{self.first_name} {self.last_name}'
 
     def __str__(self):
+        """
+        Возвращает информацию о пользователе
+        """
         return self.full_name

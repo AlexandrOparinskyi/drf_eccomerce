@@ -132,5 +132,5 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
+# Изменение основной модели пользователей на кастомную
 AUTH_USER_MODEL = 'accounts.User'

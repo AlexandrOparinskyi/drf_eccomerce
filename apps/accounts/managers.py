@@ -9,12 +9,18 @@ class CustomUserManager(BaseUserManager):
     """
 
     def email_validator(self, email):
+        """
+        Проверка email средствами django - validate_email
+        """
         try:
             validate_email(email)
         except ValidationError:
             raise ValueError('Введите верный email')
 
     def validate_user(self, first_name, last_name, email):
+        """
+        Проверка имени, фамилии и email пользователя.
+        """
         if not first_name:
             raise ValueError('У пользователя должно быть имя')
 
@@ -29,6 +35,11 @@ class CustomUserManager(BaseUserManager):
 
     def create_user(self, first_name, last_name, email,
                     password, **extra_fields):
+        """
+        Создание пользователя после проверки validate_user.
+        Установка флагов is_staff и is_admin в False, если они
+        ещё не существуют
+        """
         self.validate_user(first_name, last_name, email)
 
         user = self.model(first_name=first_name,
@@ -43,6 +54,10 @@ class CustomUserManager(BaseUserManager):
         return user
 
     def validate_superuser(self, email, password, **extra_fields):
+        """
+        Проверка email и пароля супер-пользователя.
+        Добавление флагов True в поля is_staff, is_admin, is_active
+        """
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_admin', True)
         extra_fields.setdefault('is_active', True)
@@ -66,6 +81,9 @@ class CustomUserManager(BaseUserManager):
 
     def create_superuser(self, first_name, last_name, email,
                          password, **extra_fields):
+        """
+        Создание супер-пользователя
+        """
         self.validate_superuser(email, password, **extra_fields)
         user = self.create_user(first_name, last_name, email,
                                 password, **extra_fields)
