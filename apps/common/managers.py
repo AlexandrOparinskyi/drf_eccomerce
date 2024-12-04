@@ -3,6 +3,9 @@ from django.utils import timezone
 
 
 class GetOrNoneQuerySet(models.QuerySet):
+    """
+    Кастомный Queryset для более удобного применения без блоков try/exept
+    """
     def get_or_none(self, **kwargs):
         try:
             return self.get(**kwargs)
@@ -11,6 +14,9 @@ class GetOrNoneQuerySet(models.QuerySet):
 
 
 class GetOrNoneManager(models.Manager):
+    """
+    Кастомный менеджер с методом get_or_none от GetOrNoneQuerySet
+    """
     def get_queryset(self):
         return GetOrNoneQuerySet(self)
 
@@ -19,6 +25,11 @@ class GetOrNoneManager(models.Manager):
 
 
 class IsDeletedQuerySet(GetOrNoneQuerySet):
+    """
+    Кастомный Queryset с измененным удалением
+    Если не передан ключ hard_delete, is_deleted записи присваивается True.
+    Иначе запись удаляется из базы данных
+    """
     def delete(self, hard_delete=False):
         if hard_delete:
             super().delete()
@@ -27,6 +38,10 @@ class IsDeletedQuerySet(GetOrNoneQuerySet):
 
 
 class IsDeletedManager(GetOrNoneManager):
+    """
+    Кастомный менеджер. Достает только неудаленные записи.
+    Имеет метод, что бы достать все записи
+    """
     def get_queryset(self):
         return IsDeletedManager(self.model).filter(is_deleted=False)
 

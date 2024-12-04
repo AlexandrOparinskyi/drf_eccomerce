@@ -25,7 +25,7 @@ class BaseModel(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    object = GetOrNoneManager()
+    objects = GetOrNoneManager()
 
     class Meta:
         abstract = True
@@ -44,7 +44,7 @@ class IsDeletedModel(BaseModel):
     is_deleted = models.BooleanField(default=False)
     deleted_at = models.DateTimeField(null=True, blank=True)
 
-    object = IsDeletedManager()
+    objects = IsDeletedManager()
 
     class Meta:
         abstract = True
