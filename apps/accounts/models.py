@@ -12,7 +12,10 @@ ACCOUNT_TYPE_CHOICES = (
 
 class User(AbstractUser, IsDeletedModel):
     """
-    Кастомная модель пользователя с кастомным менеджером CustomUserManager
+    Кастомная модель пользователя с кастомным менеджером CustomUserManager.
+    Наследуется от модели IsDeletedModel, которая наследуется от базовой
+    модели, поэтому имеет 4 дополнительных атрибута created_at, updated_at,
+    is_delete и deleted_at
 
     Атрибуты:
         first_name (str): Имя пользователя

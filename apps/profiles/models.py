@@ -6,7 +6,9 @@ from apps.accounts.models import User
 
 class ShippingAddress(BaseModel):
     """
-    Модель адреса доставки пользователя
+    Модель адреса доставки пользователя.
+    Наследуется от базовой модели, поэтому имеет 2 дополнительных
+    атрибута created_at и updated_at
 
     Атрибуты:
         user (ForeignKey): Модель пользователя
