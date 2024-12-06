@@ -100,8 +100,8 @@ class Order(BaseModel):
                                        default='PENDING',
                                        choices=DELIVERY_STATUS_CHOICES)
     payment_status = models.CharField(max_length=20,
-                                       default='PENDING',
-                                       choices=PAYMENT_STATUS_CHOICES)
+                                      default='PENDING',
+                                      choices=PAYMENT_STATUS_CHOICES)
 
     # Адрес пользователя. Все значение имеют null=True
     full_name = models.CharField(max_length=100, null=True)

@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-!vp^kxju^6=sf(2(bcam%leh=$i_0fjwcwm3wy*)7=*y+!xt1#
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'rest_framework',
+    'drf_spectacular',
 
     'apps.accounts',
     'apps.profiles',
@@ -134,3 +135,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Изменение основной модели пользователей на кастомную
 AUTH_USER_MODEL = 'accounts.User'
+
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema'
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'My First API',
+    'VERSION': '0.0.1',
+    'SERVE_INCLUDE_SCHEMA': False
+}

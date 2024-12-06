@@ -69,4 +69,3 @@ class Seller(BaseModel):
         Возвращает информацию о продавце
         """
         return f'Продавец {self.business_name}'
-
