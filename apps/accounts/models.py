@@ -1,4 +1,4 @@
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractBaseUser
 from django.db import models
 
 from apps.accounts.managers import CustomUserManager
@@ -10,7 +10,7 @@ ACCOUNT_TYPE_CHOICES = (
 )
 
 
-class User(AbstractUser, IsDeletedModel):
+class User(AbstractBaseUser, IsDeletedModel):
     """
     Кастомная модель пользователя с кастомным менеджером CustomUserManager.
     Наследуется от модели IsDeletedModel, которая наследуется от базовой
@@ -46,7 +46,8 @@ class User(AbstractUser, IsDeletedModel):
     is_active = models.BooleanField(verbose_name='Активный', default=True)
     account_type = models.CharField(verbose_name='Тип аккаунта',
                                     max_length=6,
-                                    choices=ACCOUNT_TYPE_CHOICES)
+                                    choices=ACCOUNT_TYPE_CHOICES,
+                                    default='BUYER')
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name']
