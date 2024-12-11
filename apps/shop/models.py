@@ -11,7 +11,7 @@ class Category(BaseModel):
     Наследуется от базовой модели, поэтому имеет 2 дополнительных
     атрибута created_at и updated_at
 
-    Атрибуты:
+    Поля:
         name (str): Название категории
         slug (slug): URL-адрес категории. Генерируется автоматически
         image (ImageField): Картинка категории
@@ -43,7 +43,7 @@ class Products(IsDeletedModel):
     модели, поэтому имеет 4 дополнительных атрибута created_at, updated_at,
     is_delete и deleted_at
 
-    Атрибуты:
+    Поля:
         seller (ForeignKey): Продавец
         name (str): Название продукта
         slug (url): URL-адрес продукты. Генерируется автоматически

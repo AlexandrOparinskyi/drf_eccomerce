@@ -6,6 +6,9 @@ from .models import User
 
 
 class CreateUserSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор создания пользователя
+    """
 
     class Meta:
         model = User

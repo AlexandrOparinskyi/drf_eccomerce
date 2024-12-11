@@ -43,10 +43,10 @@ class IsDeletedManager(GetOrNoneManager):
     Имеет метод, что бы достать все записи
     """
     def get_queryset(self):
-        return IsDeletedManager(self.model).filter(is_deleted=False)
+        return IsDeletedQuerySet(self.model).filter(is_deleted=False)
 
     def unfiltered(self):
         return IsDeletedManager(self.model)
 
     def hard_delete(self):
-        return self.get_queryset().delete(hard_delete=True)
+        return self.unfiltered().delete(hard_delete=True)

@@ -37,7 +37,7 @@ class ProductSerializer(serializers.Serializer):
 
 class CreateProductSerializer(serializers.Serializer):
     """
-    Сериализатор для создания совара
+    Сериализатор для создания товара
     """
     name = serializers.CharField(max_length=100)
     desc = serializers.CharField()

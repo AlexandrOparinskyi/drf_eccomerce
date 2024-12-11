@@ -1,4 +1,3 @@
-from attr.validators import max_len
 from rest_framework import serializers
 
 

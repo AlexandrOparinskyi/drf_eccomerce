@@ -22,7 +22,7 @@ class SellerView(APIView):
         """
         Создание продавца.
         Если пользователь существует, то меняется поле account_type=SELLER
-        Если пользователь не существует, создается новый и присваевается
+        Если пользователь не существует, создается новый и присваивается
         account_type=SELLER
         """
         user = request.user
@@ -71,6 +71,7 @@ class ProductsBySellerView(APIView):
         Создание нового продукта авторизованного продавца
         """
         serializer = CreateProductSerializer(data=request.data)
+
         if request.user.seller.is_approved == False:
             return Response(data={"message": "Seller is not approved!"}, status=404)
 
@@ -85,5 +86,4 @@ class ProductsBySellerView(APIView):
             new_prod = Products.objects.create(**data)
             serializer = ProductSerializer(new_prod)
             return Response(serializer.data, status=200)
-        else:
-            return Response(serializer.errors, status=400)
+        return Response(serializer.errors, status=400)
