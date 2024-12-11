@@ -12,7 +12,7 @@ class Seller(BaseModel):
     атрибута created_at и updated_at
 
     Атрибуты:
-        ---Информация о бизнесе---
+            ---Информация о бизнесе---
         user (OneToOneField): Создает связь с пользователем
         business_name (str): Название бизнеса продавца
         slug (AutoSlug): URL-адрес бизнеса. Генерируется автоматически
@@ -20,16 +20,16 @@ class Seller(BaseModel):
         website_url (url): Сайт продавца
         phone_number (str): Телефон продавца
         business_description (str): Описание бизнеса
-        ---Адрес---
+            ---Адрес---
         business_address (str): Адрес бизнеса
         city (str): Город бизнеса
         postal_code (str): Почтовый индекс
-        ---Информация о банке---
+            ---Информация о банке---
         bank_name (str): Название банка
         bank_bic_number (str): БИК банка
         bank_account_number (str): Номер банковского счета
         bank_routing_number (str): Номер банковского счета
-        ---Информация о статусе---
+            ---Информация о статусе---
         is_approved (bool): Статус, прошел ли продавец проверку
 
     Методы:

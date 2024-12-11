@@ -123,6 +123,7 @@ class ShippingAddressViewID(APIView):
 
     @extend_schema(
         summary='Получение адреса по id',
+        description='Укажите нужный id',
         tags=tags
     )
     def get(self, request, *args, **kwargs):
@@ -133,6 +134,7 @@ class ShippingAddressViewID(APIView):
 
     @extend_schema(
         summary='Изменение адреса по id',
+        description='Укажите нужный id',
         tags=tags
     )
     def put(self, request, *args, **kwargs):
@@ -148,6 +150,7 @@ class ShippingAddressViewID(APIView):
 
     @extend_schema(
         summary='Удаление адреса по id',
+        description='Укажите нужный id',
         tags=tags
     )
     def delete(self, request, *args, **kwargs):
