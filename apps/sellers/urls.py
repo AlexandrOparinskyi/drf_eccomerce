@@ -1,7 +1,9 @@
 from django.urls import path
 
-from apps.sellers.views import SellerView
+from apps.sellers.views import (SellerView,
+                                ProductsBySellerView)
 
 urlpatterns = [
-    path('', SellerView.as_view())
+    path('', SellerView.as_view()),
+    path("products/", ProductsBySellerView.as_view()),
 ]

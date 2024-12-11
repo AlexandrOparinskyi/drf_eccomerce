@@ -1,3 +1,4 @@
+from drf_spectacular.utils import extend_schema
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -10,6 +11,9 @@ from apps.accounts.serializers import (CreateUserSerializer,
 class RegisterAPIView(APIView):
     serializer_class = CreateUserSerializer
 
+    @extend_schema(
+        summary='Регистрация пользователя'
+    )
     def post(self, request):
         """
         POST-запрос создает пользователя вместе с refresh и access_token
