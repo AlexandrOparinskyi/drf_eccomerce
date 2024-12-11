@@ -9,12 +9,9 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
-import os
+
 from datetime import timedelta
 from pathlib import Path
-from dotenv import load_dotenv
-
-load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -24,10 +21,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY')
+SECRET_KEY = 'django-insecure-!vp^kxju^6=sf(2(bcam%leh=$i_0fjwcwm3wy*)7=*y+!xt1#'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG')
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -150,15 +147,21 @@ REST_FRAMEWORK = {
 
 # Настройка отображения swagger (api/docs)
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'My First API',
-    'VERSION': '0.0.1',
-    'SERVE_INCLUDE_SCHEMA': False
+    'TITLE': 'My First API', # Название странички API
+    'VERSION': '0.0.1', # Версия API
+    'SERVE_INCLUDE_SCHEMA': False, # Отключение api-схемы
+    'SWAGGER_UI_SETTINGS': {
+        'persistAuthorization': True  # Пользователя не выкидывает
+                                      # при перезагрузке
+    }
 }
 
 # Настройка jwt-авторизации
 SIMPLE_JWT = {
-    'ROTATE_REFRESH_TOKENS': True,
-    'BLACKLIST_AFTER_ROTATION': True,
-    'ACCESS_TOKEN_LIFETIME': timedelta(days=7),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=30)
+    'ROTATE_REFRESH_TOKENS': True, # Генерация нового refresh_token после
+                                   # обновления access_token
+    'BLACKLIST_AFTER_ROTATION': True, # После генерации нового refresh_token
+                                      # старый отправляется в черный список
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=7), # Время жизни access_token
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=30) # Время жизни refresh_token
 }
