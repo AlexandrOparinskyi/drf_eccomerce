@@ -105,8 +105,6 @@ class ShippingAddressViewID(APIView):
         Получение адреса по ID
         """
         shipping_address = ShippingAddress.objects.get_or_none(id=shipping_id)
-        if not shipping_address:
-            return Response({'message': 'Адрес с указанным id не найден'})
         return shipping_address
 
     @extend_schema(
@@ -120,6 +118,10 @@ class ShippingAddressViewID(APIView):
         """
         user = request.user
         shipping_address = self.get_object(user, kwargs.get('id'))
+
+        if not shipping_address:
+            return Response({'message': 'Адрес с указанным id не найден'})
+
         serializer = self.serializer_class(shipping_address)
         return Response(serializer.data, status=200)
 
@@ -134,6 +136,10 @@ class ShippingAddressViewID(APIView):
         """
         user = request.user
         shipping_address = self.get_object(user, kwargs.get('id'))
+
+        if not shipping_address:
+            return Response({'message': 'Адрес с указанным id не найден'})
+
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
@@ -153,5 +159,9 @@ class ShippingAddressViewID(APIView):
         """
         user = request.user
         shipping_address = self.get_object(user, kwargs.get('id'))
+
+        if not shipping_address:
+            return Response({'message': 'Адрес с указанным id не найден'})
+
         shipping_address.delete()
         return Response({'message': 'Адрес удален'}, status=204)
