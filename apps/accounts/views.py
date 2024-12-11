@@ -8,20 +8,12 @@ from apps.accounts.serializers import (CreateUserSerializer,
 
 
 class RegisterAPIView(APIView):
-    """
-    Представление для регистрации пользователя
-
-    Методы:
-        post(): После проверки полей сериализатором CreateUserSerializer
-                добавляет поля в access_token. Если пользователь является
-                администратором - добавляется поле {group: admin}.
-                Если обычный пользователь -
-                {group: user, role: роль пользователя}. При ошибке
-                возвращает сообщение ошибки и статус 400
-    """
     serializer_class = CreateUserSerializer
 
     def post(self, request):
+        """
+        POST-запрос создает пользователя вместе с refresh и access_token
+        """
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
@@ -43,7 +35,7 @@ class RegisterAPIView(APIView):
 
 class MyTokenObtainPairView(TokenObtainPairView):
     """
-    Переопределение представления TokenObtainPairView для использования
-    нужного (своего) сериализатора
+    Переопределение представления TokenObtainPairView.
+    Необходим для использования своего сериализатора
     """
     serializer_class = MyTokenObtainPairSerializer

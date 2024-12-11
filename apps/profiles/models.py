@@ -12,7 +12,7 @@ class ShippingAddress(BaseModel):
     Наследуется от базовой модели, поэтому имеет 2 дополнительных
     атрибута created_at и updated_at
 
-    Атрибуты:
+    Поля:
         user (ForeignKey): Модель пользователя
         full_name (str): Полное имя
         email (str): Email
@@ -46,34 +46,34 @@ class ShippingAddress(BaseModel):
 
 class Order(BaseModel):
     """
-        Модель заказа товаров с адресом доставки.
-        Наследуется от базовой модели, поэтому имеет 2 дополнительных
-        атрибута created_at и updated_at
+    Модель заказа товаров с адресом доставки.
+    Наследуется от базовой модели, поэтому имеет 2 дополнительных
+    атрибута created_at и updated_at
 
-        Атрибуты:
-            ---Детали заказа---
-            user (ForeignKey): Пользователь, делающий заказ
-            tx_ref (str): Уникальный код. Генерируется с помощью
-                          generate_unique_code
-            delivery_status  (str/choices): Статус доставки
-                                            (DELIVERY_STATUS_CHOICES)
-            payment_status (str/choices): Статус оплаты
-                                          (PAYMENT_STATUS_CHOICES)
+    Поля:
+        ---Детали заказа---
+        user (ForeignKey): Пользователь, делающий заказ
+        tx_ref (str): Уникальный код. Генерируется с помощью
+                      generate_unique_code
+        delivery_status  (str/choices): Статус доставки
+                                        (DELIVERY_STATUS_CHOICES)
+        payment_status (str/choices): Статус оплаты
+                                      (PAYMENT_STATUS_CHOICES)
 
-            ---Адрес доставки---
-            user (ForeignKey): Модель пользователя
-            full_name (str): Полное имя
-            email (str): Email
-            phone (str): Телефон
-            address (str): адрес
-            city (str): Город
-            country (str): Страна
-            zipcode (int): Почтовый индекс
+        ---Адрес доставки---
+        user (ForeignKey): Модель пользователя
+        full_name (str): Полное имя
+        email (str): Email
+        phone (str): Телефон
+        address (str): адрес
+        city (str): Город
+        country (str): Страна
+        zipcode (int): Почтовый индекс
 
-        Методы:
-            __str__(): Возвращает информацию об адресе
-            save(): Переопределение метода для добавления
-                    уникального кода (tx_ref)
+    Методы:
+        __str__(): Возвращает информацию об адресе
+        save(): Переопределение метода для добавления
+                уникального кода (tx_ref)
         """
 
     DELIVERY_STATUS_CHOICES = (
@@ -133,9 +133,9 @@ class OrderItem(BaseModel):
     """
     Модель продукта в заказе.
     Наследуется от базовой модели, поэтому имеет 2 дополнительных
-        атрибута created_at и updated_at
+    атрибута created_at и updated_at
 
-    Атрибуты:
+    Поля:
         user (ForeignKey): Пользователь
         order (ForeignKey): Заказ
         product (ForeignKey): Продукт

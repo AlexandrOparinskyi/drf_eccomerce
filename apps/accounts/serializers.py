@@ -6,36 +6,27 @@ from .models import User
 
 
 class CreateUserSerializer(serializers.ModelSerializer):
-    """
-    Сериализатор для регистрации пользователя.
-
-    Передаются поля:
-        email
-        password
-    Методы:
-        validate_password(): Хеширует пароль, перед записью в бд
-    """
 
     class Meta:
         model = User
         fields = ('email', 'password')
 
     def validate_password(self, value: str) -> str:
+        """
+        Хеширует пароль с помощью make_password
+        """
         return make_password(value)
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     """
     Переопределение сериализатора получения access_token
-
-    Методы:
-        get_token(): Добавляет поля в access_token. Если пользователь
-                     является администратором - добавляется поле
-                     {group: admin}. Если обычный пользователь -
-                     {group: user, role: роль пользователя}
     """
     @classmethod
     def get_token(cls, user):
+        """
+        Добавляет пары {key: value} в access_token
+        """
         token = super().get_token(user)
 
         if user.is_staff:

@@ -17,7 +17,7 @@ class User(AbstractBaseUser, IsDeletedModel):
     модели, поэтому имеет 4 дополнительных атрибута created_at, updated_at,
     is_delete и deleted_at
 
-    Атрибуты:
+    Поля:
         first_name (str): Имя пользователя
         last_name (str): Фамилия пользователя
         email (str): Email пользователя

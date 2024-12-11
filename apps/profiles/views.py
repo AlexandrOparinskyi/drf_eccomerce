@@ -12,17 +12,6 @@ tags = ['Profiles']
 
 
 class ProfileView(APIView):
-    """
-    Представление пользователя. Доступно 3 метода для получения,
-    изменения и удаления
-
-    Методы:
-        get(): Получает информацию о пользователе
-        put(): Частично изменяет информацию о пользователе.
-               Доступно 3 поля - имя, фамилия, фото
-        delete(): Меняет статус пользователя is_active на False
-    """
-
     serializer_class = ProfileSerializer
 
     @extend_schema(
@@ -32,6 +21,9 @@ class ProfileView(APIView):
         tags=tags
     )
     def get(self, request):
+        """
+        Получение информации о пользователе
+        """
         user = request.user
         serializer = self.serializer_class(user)
         return Response(serializer.data, status=200)
@@ -43,6 +35,9 @@ class ProfileView(APIView):
         tags=tags
     )
     def put(self, request):
+        """
+        Изменение информации о пользователе
+        """
         user = request.user
         serializer = self.serializer_class(data=request.data)
         print(serializer)
@@ -58,6 +53,9 @@ class ProfileView(APIView):
         tags=tags
     )
     def delete(self, request):
+        """
+        Удаление пользователя путем изменения поля is_active=False
+        """
         user = request.user
         user.is_active = False
         user.save()
@@ -65,15 +63,6 @@ class ProfileView(APIView):
 
 
 class ShippingAddressView(APIView):
-    """
-    Представление адресов пользователя. Доступно 2 метода для
-    получения и создания
-
-    Методы:
-        get(): Получает адрес пользователя
-        post(): Создает новый адрес пользователя
-    """
-
     serializer_class = ShippingAddressSerializer
 
     @extend_schema(
@@ -81,6 +70,9 @@ class ShippingAddressView(APIView):
         tags=tags
     )
     def get(self, request):
+        """
+        Получение адреса пользователя
+        """
         user = request.user
         shipping_address = ShippingAddress.objects.filter(user=user)
         serializer = self.serializer_class(shipping_address,
@@ -92,6 +84,10 @@ class ShippingAddressView(APIView):
         tags=tags
     )
     def post(self, request, *args, **kwargs):
+        """
+        Создание адреса пользователя.
+        Если при создании такой адрес уже есть - новый не создается
+        """
         user = request.user
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -103,19 +99,12 @@ class ShippingAddressView(APIView):
 
 
 class ShippingAddressViewID(APIView):
-    """
-    Представление для конкретного адреса пользователя по ID.
-    Доступно 3 метода, получение, изменение и удаление
-
-    Методы:
-        get(address_id): Получение конкретного адреса
-        put(address_id): Изменение конкретного адреса
-        delete(address_id): Удаление конкретного адреса
-    """
-
     serializer_class = ShippingAddressSerializer
 
     def get_object(self, user, shipping_id):
+        """
+        Получение адреса по ID
+        """
         shipping_address = ShippingAddress.objects.get_or_none(id=shipping_id)
         if not shipping_address:
             return Response({'message': 'Адрес с указанным id не найден'})
@@ -127,6 +116,9 @@ class ShippingAddressViewID(APIView):
         tags=tags
     )
     def get(self, request, *args, **kwargs):
+        """
+        Получение информации адреса по ID
+        """
         user = request.user
         shipping_address = self.get_object(user, kwargs.get('id'))
         serializer = self.serializer_class(shipping_address)
@@ -138,6 +130,9 @@ class ShippingAddressViewID(APIView):
         tags=tags
     )
     def put(self, request, *args, **kwargs):
+        """
+        Изменение адреса по ID
+        """
         user = request.user
         shipping_address = self.get_object(user, kwargs.get('id'))
         serializer = self.serializer_class(data=request.data)
@@ -154,6 +149,9 @@ class ShippingAddressViewID(APIView):
         tags=tags
     )
     def delete(self, request, *args, **kwargs):
+        """
+        Удаление адреса по ID
+        """
         user = request.user
         shipping_address = self.get_object(user, kwargs.get('id'))
         shipping_address.delete()

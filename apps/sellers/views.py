@@ -9,13 +9,6 @@ tags = ['Sellers']
 
 
 class SellerView(APIView):
-    """
-    Представление для создания статуса продавца
-
-    Методы:
-        post(): Создает пользователя со статусом продавца
-    """
-
     serializer_class = SellerSerializer
 
     @extend_schema(
@@ -24,6 +17,12 @@ class SellerView(APIView):
         tags=tags
     )
     def post(self, request):
+        """
+        Создание продавца.
+        Если пользователь существует, то меняется поле account_type=SELLER
+        Если пользователь не существует, создается новый и присваевается
+        account_type=SELLER
+        """
         user = request.user
         serializer = self.serializer_class(data=request.data, partial=False)
         if serializer.is_valid():
