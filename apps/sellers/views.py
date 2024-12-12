@@ -1,7 +1,6 @@
 from drf_spectacular.utils import extend_schema
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from unicodedata import category
 
 from apps.common.utils import set_dict_attr
 from apps.sellers.models import Seller
