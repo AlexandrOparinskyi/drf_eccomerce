@@ -5,10 +5,11 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from yaml import serialize
 
-from apps.profiles.models import OrderItem
+from apps.profiles.models import OrderItem, ShippingAddress, Order
 from apps.sellers.models import Seller
 from apps.shop.models import Category, Products
-from apps.shop.serializers import CategorySerializer, ProductSerializer, OrderItemSerializer, ToggleCartItemSerializer
+from apps.shop.serializers import CategorySerializer, ProductSerializer, OrderItemSerializer, ToggleCartItemSerializer, \
+    CheckoutSerializer, OrderSerializer
 
 tags = ['Shop']
 
@@ -183,12 +184,61 @@ class CartView(APIView):
         if orderitem.quantity == 0:
             resp_message_substring = 'Удален'
             orderitem.delete()
-        data = None
+            data = None
         if resp_message_substring == 'Удален':
             orderitem.product = product
             serializer = self.serializer_class(orderitem)
             data = serializer.data
         return Response(data={'message': f'Товар {resp_message_substring}',
-                              'data': data},
+                              'item': data},
                         status=status)
 
+
+class CheckoutView(APIView):
+    serializer_class = CheckoutSerializer
+
+    @extend_schema(
+        summary='Проверка',
+        description='Создание заказа',
+        tags=tags,
+        request=CheckoutSerializer
+    )
+    def post(self, request, *args, **kwargs):
+        user = request.user
+        orderitems = OrderItem.objects.filter(user=user, order=None)
+        if not orderitems.exists():
+            return Response({'message': 'Корзина пуста'}, status=404)
+
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        data = serializer.validated_data
+        shipping_id = data.get('shipping_id')
+        if shipping_id:
+            shipping = ShippingAddress.objects.get_or_none(id=shipping_id)
+            if not shipping:
+                return Response({'message': 'Нету адреса по этому ID'},
+                                status=404)
+
+        def append_shipping_details(shipping):
+            fields_to_update = [
+                "full_name",
+                "email",
+                "phone",
+                "address",
+                "city",
+                "country",
+                "zipcode",
+            ]
+            data = {}
+            for field in fields_to_update:
+                value = getattr(shipping, field)
+                data[field] = value
+            return data
+
+        order = Order.objects.create(user=user,
+                                     **append_shipping_details(shipping))
+        orderitems.update(order=order)
+        serializer = OrderSerializer(order)
+        return Response({'message': 'Успешная проверка',
+                        'item': serializer.data},
+                        status=200)

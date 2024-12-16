@@ -1,5 +1,7 @@
+from drf_spectacular.utils import extend_schema, extend_schema_field
 from rest_framework import serializers
 
+from apps.profiles.serializers import ShippingAddressSerializer
 from apps.sellers.serializers import SellerSerializer
 
 
@@ -81,3 +83,35 @@ class ToggleCartItemSerializer(serializers.Serializer):
     """
     slug = serializers.SlugField()
     quantity = serializers.IntegerField()
+    
+    
+class CheckoutSerializer(serializers.Serializer):
+    """
+    Сериализатор для валидации данных на этапе с этапа оформления
+    до создания самого заказа
+    """
+    shipping_id = serializers.UUIDField()
+
+
+class OrderSerializer(serializers.Serializer):
+    """
+    Сериализатор для представления данных о заказе
+    """
+    tx_ref = serializers.CharField()
+    first_name = serializers.CharField(source='user.first_name')
+    last_name = serializers.CharField(source='user.last_name')
+    email = serializers.CharField(source='user.email')
+    delivery_status = serializers.CharField()
+    payment_status = serializers.CharField()
+    date_delivered = serializers.DateTimeField()
+    shipping_details = serializers.SerializerMethodField()
+    subtotal = serializers.DecimalField(
+        max_digits=10, decimal_places=2, source='get_cart_subtotal'
+    )
+    total = serializers.DecimalField(
+        max_digits=10, decimal_places=2, source='get_cart_total'
+    )
+
+    @extend_schema_field(ShippingAddressSerializer)
+    def get_shipping_details(self, obj):
+        return ShippingAddressSerializer(obj).data
