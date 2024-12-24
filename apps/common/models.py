@@ -48,6 +48,7 @@ class IsDeletedModel(BaseModel):
 
     class Meta:
         abstract = True
+        ordering = ['-id']
 
     def delete(self, *args, **kwargs):
         self.is_deleted = True

@@ -1,15 +1,19 @@
-from email.policy import default
-
 from drf_spectacular.utils import extend_schema
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from yaml import serialize
 
+from apps.common.paginations import CustomPagination
 from apps.profiles.models import OrderItem, ShippingAddress, Order
 from apps.sellers.models import Seller
+from apps.shop.filters import ProductFilter
 from apps.shop.models import Category, Products
-from apps.shop.serializers import CategorySerializer, ProductSerializer, OrderItemSerializer, ToggleCartItemSerializer, \
-    CheckoutSerializer, OrderSerializer
+from apps.shop.schema_examples import PRODUCT_PARAM_EXAMPLE
+from apps.shop.serializers import (CategorySerializer,
+                                   ProductSerializer,
+                                   OrderItemSerializer,
+                                   ToggleCartItemSerializer,
+                                   CheckoutSerializer,
+                                   OrderSerializer)
 
 tags = ['Shop']
 
@@ -45,8 +49,8 @@ class CategoriesView(APIView):
             serializer = self.serializer_class(new_cat)
             return Response(serializer.data, status=201)
         return Response(serializer.errors, status=400)
-    
-    
+
+
 class ProductsByCategoryView(APIView):
     serializer_class = ProductSerializer
 
@@ -74,12 +78,14 @@ class ProductsByCategoryView(APIView):
 
 class ProductsView(APIView):
     serializer_class = ProductSerializer
+    pagination_class = CustomPagination
 
     @extend_schema(
         operation_id="all_products",
         summary='Получение всех товаров',
         description='Получение всех товаров',
-        tags=tags
+        tags=tags,
+        parameters=PRODUCT_PARAM_EXAMPLE
     )
     def get(self, request):
         products = Products.objects.select_related(
@@ -87,8 +93,15 @@ class ProductsView(APIView):
             'seller',
             'seller__user'
         ).all()
-        serializer = ProductSerializer(products, many=True)
-        return Response(serializer.data, status=200)
+        filterset = ProductFilter(request.GET, queryset=products)
+        if filterset.is_valid():
+            queryset = filterset.qs
+            paginator = self.pagination_class()
+            paginated_queryset = paginator.paginate_queryset(queryset,
+                                                             request)
+            serializer = ProductSerializer(paginated_queryset, many=True)
+            return paginator.get_paginated_response(serializer.data)
+        return Response(filterset.errors, status=400)
 
 
 class ProductsBySellerView(APIView):
@@ -158,7 +171,7 @@ class CartView(APIView):
         tags=tags
     )
     def post(self, request, *args, **kwargs):
-        user=request.user
+        user = request.user
         serializer = ToggleCartItemSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data

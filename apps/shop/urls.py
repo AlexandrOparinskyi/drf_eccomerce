@@ -1,7 +1,12 @@
 from django.urls import path
 
-from apps.shop.views import CategoriesView, ProductsByCategoryView, ProductsView, ProductsBySellerView, ProductView, \
-    CartView, CheckoutView
+from apps.shop.views import (CategoriesView,
+                             ProductsByCategoryView,
+                             ProductsView,
+                             ProductsBySellerView,
+                             ProductView,
+                             CartView,
+                             CheckoutView)
 
 urlpatterns = [
     path('categories/', CategoriesView.as_view()),

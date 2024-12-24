@@ -14,12 +14,11 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
-from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
-
-from core import settings
+from drf_spectacular.views import (SpectacularAPIView,
+                                   SpectacularSwaggerView,
+                                   SpectacularRedocView)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -32,5 +31,6 @@ urlpatterns = [
     path('auth/', include('apps.accounts.urls')),
     path('profiles/', include('apps.profiles.urls')),
     path('sellers/', include('apps.sellers.urls')),
-    path('shop/', include('apps.shop.urls'))
+    path('shop/', include('apps.shop.urls')),
+    path('reviews/', include('apps.reviews.urls'))
 ]

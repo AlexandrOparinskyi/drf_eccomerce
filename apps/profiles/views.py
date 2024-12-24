@@ -2,6 +2,7 @@ from drf_spectacular.utils import extend_schema
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from apps.common.permissions import IsOwner
 from apps.common.utils import set_dict_attr
 from apps.profiles.models import ShippingAddress
 from apps.profiles.serializers import (ProfileSerializer,
@@ -12,6 +13,7 @@ tags = ['Profiles']
 
 class ProfileView(APIView):
     serializer_class = ProfileSerializer
+    permission_classes = [IsOwner]
 
     @extend_schema(
         summary='Получение профиля',
@@ -63,6 +65,7 @@ class ProfileView(APIView):
 
 class ShippingAddressView(APIView):
     serializer_class = ShippingAddressSerializer
+    permission_classes = [IsOwner]
 
     @extend_schema(
         summary='Получение адреса пользователя',
@@ -105,6 +108,8 @@ class ShippingAddressViewID(APIView):
         Получение адреса по ID
         """
         shipping_address = ShippingAddress.objects.get_or_none(id=shipping_id)
+        if shipping_address is not None:
+            self.check_object_permissions(self.request, shipping_address)
         return shipping_address
 
     @extend_schema(

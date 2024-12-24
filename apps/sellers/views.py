@@ -2,6 +2,7 @@ from drf_spectacular.utils import extend_schema
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from apps.common.permissions import IsSeller
 from apps.common.utils import set_dict_attr
 from apps.sellers.models import Seller
 from apps.sellers.serializers import SellerSerializer
@@ -13,6 +14,7 @@ tags = ['Sellers']
 
 class SellerView(APIView):
     serializer_class = SellerSerializer
+    permission_classes = [IsSeller]
 
     @extend_schema(
         summary='Получение статуса продавца',
@@ -41,6 +43,7 @@ class SellerView(APIView):
 
 class ProductsBySellerView(APIView):
     serializer_class = ProductSerializer
+    permission_classes = [IsSeller]
 
     @extend_schema(
         summary="Получение товаров",
@@ -74,7 +77,7 @@ class ProductsBySellerView(APIView):
         """
         serializer = CreateProductSerializer(data=request.data)
 
-        if request.user.seller.is_approved == False:
+        if request.user.seller.is_approved is False:
             return Response(
                 data={"message": "Пользователь не является продавцом"},
                 status=404
@@ -97,9 +100,12 @@ class ProductsBySellerView(APIView):
 
 class SellerProductView(APIView):
     serializer_class = CreateProductSerializer
+    permission_classes = [IsSeller]
 
     def get_object(self, product_slug):
         product = Products.objects.get_or_none(slug=product_slug)
+        if product is not None:
+            self.check_object_permissions(self.request, property)
         return product
 
     @extend_schema(

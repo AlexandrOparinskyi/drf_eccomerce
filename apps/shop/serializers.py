@@ -1,4 +1,4 @@
-from drf_spectacular.utils import extend_schema, extend_schema_field
+from drf_spectacular.utils import extend_schema_field
 from rest_framework import serializers
 
 from apps.profiles.serializers import ShippingAddressSerializer
@@ -83,8 +83,8 @@ class ToggleCartItemSerializer(serializers.Serializer):
     """
     slug = serializers.SlugField()
     quantity = serializers.IntegerField()
-    
-    
+
+
 class CheckoutSerializer(serializers.Serializer):
     """
     Сериализатор для валидации данных на этапе с этапа оформления
