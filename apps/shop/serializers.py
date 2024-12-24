@@ -28,7 +28,7 @@ class SellerShopSerializer(serializers.Serializer):
 
 class ProductSerializer(serializers.Serializer):
     """
-    Сериализатор для получения товаров
+    Сериализатор для получения товаров.
     """
     seller = SellerShopSerializer()
     name = serializers.CharField()
