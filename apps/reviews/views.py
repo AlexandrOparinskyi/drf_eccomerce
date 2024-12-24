@@ -30,6 +30,7 @@ class ReviewsAPIView(APIView):
         if not product:
             return Response({'message': 'Product not found'},
                             status=404)
+
         reviews = Review.objects.filter(product=product)
         serializer = self.serializer_class(reviews, many=True)
         return Response(serializer.data, status=200)
@@ -44,6 +45,12 @@ class ReviewsAPIView(APIView):
         if not product:
             return Response({'message': 'Product not found'},
                             status=404)
+
+        if Review.objects.filter(user=request.user,
+                                 product=product,
+                                 is_deleted=False).exists():
+            return Response({'message': 'Вы уже оставили отзыв на этот продукт'})
+
         serializer = CreateReviewSerializer(data=request.data)
         if serializer.is_valid():
             review = Review.objects.create(user=request.user,
@@ -84,6 +91,7 @@ class SingleReviewAPIView(APIView):
         if not review:
             return Response({'message': 'Review not found'},
                             status=400)
+
         serializer = CreateReviewSerializer(data=request.data)
         if serializer.is_valid():
             data = serializer.validated_data
@@ -103,6 +111,7 @@ class SingleReviewAPIView(APIView):
         if not review:
             return Response({'message': 'Review not found'},
                             status=400)
+
         review.is_deleted = True
         review.save()
         return Response(status=204)

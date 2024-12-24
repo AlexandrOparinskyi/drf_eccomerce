@@ -1,8 +1,11 @@
 from drf_spectacular.utils import extend_schema_field
 from rest_framework import serializers
+from django.db import models
 
+from apps.common.utils import avg_rating
 from apps.profiles.serializers import ShippingAddressSerializer
 from apps.sellers.serializers import SellerSerializer
+from apps.shop.models import Products
 
 
 class CategorySerializer(serializers.Serializer):
@@ -37,6 +40,12 @@ class ProductSerializer(serializers.Serializer):
     image1 = serializers.ImageField()
     image2 = serializers.ImageField(required=False)
     image3 = serializers.ImageField(required=False)
+    rating = serializers.SerializerMethodField()
+
+    def get_rating(self, obj):
+        if obj.product_reviews.exists():
+            return round(avg_rating(obj.product_reviews.all()), 1)
+        return None
 
 
 class CreateProductSerializer(serializers.Serializer):

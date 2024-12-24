@@ -1,3 +1,4 @@
+from django.db.models import Prefetch
 from drf_spectacular.utils import extend_schema
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -91,7 +92,9 @@ class ProductsView(APIView):
         products = Products.objects.select_related(
             'category',
             'seller',
-            'seller__user'
+            'seller__user',
+        ).prefetch_related(
+            Prefetch('product_reviews')
         ).all()
         filterset = ProductFilter(request.GET, queryset=products)
         if filterset.is_valid():
@@ -99,7 +102,7 @@ class ProductsView(APIView):
             paginator = self.pagination_class()
             paginated_queryset = paginator.paginate_queryset(queryset,
                                                              request)
-            serializer = ProductSerializer(paginated_queryset, many=True)
+            serializer = self.serializer_class(paginated_queryset, many=True)
             return paginator.get_paginated_response(serializer.data)
         return Response(filterset.errors, status=400)
 
@@ -121,6 +124,8 @@ class ProductsBySellerView(APIView):
             'category',
             'seller',
             'seller__user'
+        ).prefetch_related(
+            Prefetch('product_reviews')
         ).filter(seller=seller)
         serializer = self.serializer_class(products, many=True)
         return Response(serializer.data, status=200)

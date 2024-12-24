@@ -16,3 +16,6 @@ class Review(IsDeletedModel):
     rating = models.IntegerField(validators=[MinValueValidator(1),
                                              MaxValueValidator(5)])
     text = models.TextField(null=True)
+
+    def __str__(self):
+        return f'Review by {self.user}'
